@@ -1,7 +1,9 @@
 from flask import Flask
+from flask_cors import CORS
 
 from config import config
 from models import db
+
 
 def create_app(config_name='dev'):
     """App factory method for initializing flask extensions and registering
@@ -10,6 +12,7 @@ def create_app(config_name='dev'):
     Later can implement other configs like test and prod.
     """
     app = Flask(__name__, instance_relative_config=True)
+    CORS(app, resources={r"/api/*": {"origins": "*"}})
 
     # config data defined in config.py
     app.config.from_object(config[config_name])
