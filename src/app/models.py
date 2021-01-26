@@ -27,25 +27,30 @@ class BaseModel(Model):
 # globally accessible database connection
 db = SQLAlchemy(model_class=BaseModel)
 
-
 class Project(db.Model):
-    """An MEC project."""
+    """An MEC Project"""
     __tablename__ = 'projects'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=true)
+    project_type = db.Column(db.)
+
+    def __repr__(self):
+        return  f'Project(id={self.id}, \'
+                f'project_type={self.project_type}'
+
+class Transportation(db.Model):
+    """An MEC Transportation project."""
+    __tablename__ = 'transportation_projects'
+    id_mec = db.Column(db.Integer, primary_key=True)
+    id_internal = db.relationship(db.Integer, db.ForeignKey('projects.id'))
     name = db.Column(db.String(100), nullable=False, unique=True)
-    description = db.Column(db.String(250))
+    description = db.Column(db.Text())
     photo_url = db.Column(db.String(250))
     website_url = db.Column(db.String(250))
     funder = db.Column(db.String(250))
     fleet_or_station = db.Column(db.String(250))
-    year = db.Column(db.Integer, nullable=False)
+    year = db.Column(db.Integer, nullable=True)
     gge_reduced = db.Column(db.Float)
     ghg_reduced = db.Column(db.Float)
-    # Many to one relationship with project types
-    project_type_id = db.Column(db.Integer, db.ForeignKey('project_types.id'))
-
-    type = db.relationship('ProjectType',
-                           backref=db.backref('projects', lazy='select'))
 
     def __repr__(self):
         return  f'Project(name={self.name}, '\
@@ -56,19 +61,27 @@ class Project(db.Model):
                 f'ghg_reduced={self.ghg_reduced}, '\
                 f'gge_reduced={self.gge_reduced})'
 
-
-class ProjectType(db.Model):
-    """Different categories of projects. I.e. building, vehicle transportation,
-    infrastructure transportation, etc. This could potentially be moved into
-    a column in the project model, if no new fields are added in the future.
-    """
-    __tablename__ = 'project_types'
-    id = db.Column(db.Integer, primary_key=True)
-    type_name = db.Column(db.String(30), nullable=False, unique=True)
+class Buildings(db.Model):
+    """An MEC Building Project"""
+    __tablename__ = 'building_projects'
+    id_mec = db.Column(db.String(36), primary_key=True)
+    id_internal = db.relationship(db.Integer, db.ForeignKey('projects.id'))
+    year_built = db.Column(db.Integer)
+    conditioned_sq_ft = db.Column(db.Integer)
+    building_type = db.Column(db.String(30))
+    savings_kbtu = db.Column(db.Float)
+    savings_electricity = db.Column(db.Float)
+    savings_natural_gas = db.Column(db.Float)
+    savings_other = db.Column(db.Float)
 
     def __repr__(self):
-        return f'ProjectType(type_name={self.type_name})'
-
+        return  f'BuildingProject(year_built={self.year_built}, '\
+                f'conditioned_sq_ft={self.conditioned_sq_ft}, '\
+                f'building_type={self.building_type}, \'
+                f'savings_kbtu={self.savings_kbtu}, \'
+                f'savings_electricity={self.savings_electricity}, \'
+                f'savings_natural_gas={self.savings_natural_gas}, \'
+                f'savings_other={self.savings_other})'
 
 class Location(db.Model):
     """Model for spatial data."""
@@ -78,6 +91,7 @@ class Location(db.Model):
     city = db.Column(db.String(50))
     state = db.Column(db.String(2))
     zip_code = db.Column(db.Integer)
+    county = db.Column(db.String(30))
     location = db.Column(Geometry(geometry_type='POINT'))
     project_id = db.Column(db.Integer, db.ForeignKey('projects.id'))
     project = db.relationship('Project', backref='locations')
@@ -95,6 +109,7 @@ class Location(db.Model):
     def __repr__(self):
         return f'Location(address={self.address}, city={self.city}, '\
                f'state={self.state}, zip_code={self.zip_code}, '\
+               f'county={self.county},'\
                f'location={self.location}, '\
                f'project_id={self.project_id})'
 
@@ -105,6 +120,7 @@ class Location(db.Model):
             'city': self.city,
             'state': self.state,
             'zip_code': self.zip_code,
+            'county': self.county,
             **self.coords
         }
 
