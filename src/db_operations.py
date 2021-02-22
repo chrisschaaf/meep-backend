@@ -60,43 +60,37 @@ def seed_db(config='dev'):
 
         # project types
         building = ProjectType(type_name='Building')
-        vehicle_transportation = ProjectType(
-            type_name='Vehicle Transportation')
-        infastructure_transportation = ProjectType(
-            type_name='Infastructure Transportation')
-        for pt in building, vehicle_transportation, infastructure_transportation:
+        transportation = ProjectType(type_name='Transportation')
+        for pt in building, transportation:
             db.session.add(pt)
 
-        # projects
-        p1 = Project(name='Black Hills Energy- KS', year=2013,
-                     gge_reduced=1995, ghg_reduced=2.5845225, type=building)
-        p2 = Project(name='Central States Beverage Company', year=2012,
-                     gge_reduced=2891.461077, ghg_reduced=1.133452742,
-                     type=building)
-        p3 = Project(name='City of Kansas City Missouri - CNG Shuttle',
-                     year=2017, gge_reduced=269133.3, ghg_reduced=226.6102386,
-                     type=infastructure_transportation)
-        p4 = Project(name='City of Kansas City Missouri - CNG Vans',
-                     year=2017, gge_reduced=87652.7, ghg_reduced=113.5540729,
-                     type=vehicle_transportation)
-        p5 = Project(name='Dart Long-Haul Fleet', year=2015,
-                     gge_reduced=720000, ghg_reduced=606.24,
-                     type=vehicle_transportation)
-        p6 = Project(name='Lincoln Airport Authority -CNG', year=2017,
-                     gge_reduced=11970, ghg_reduced=15.507135, type=building)
-        p7 = Project(name=' State of Missouri - Propane', year=2017,
-                     gge_reduced=903.101, ghg_reduced=1.276533264,
-                     type=building)
-        p8 = Project(name='Zarco 66 Heavy Duty B20', year=2014,
-                     gge_reduced=1093.80128, ghg_reduced=9.578417809,
-                     type=vehicle_transportation)
+        # Building Projects
+        b1 = Buildings(name='Black Hills Energy- KS', year=2013,
+                     gge_reduced=1995, ghg_reduced=2.5845225)
+        b2 = Buildings(name='Central States Beverage Company', year=2012,
+                     gge_reduced=2891.461077, ghg_reduced=1.133452742)
+        b3 = Buildings(name='Lincoln Airport Authority -CNG', year=2017,
+                     gge_reduced=11970, ghg_reduced=15.507135)
+        b4 = Buildings(name=' State of Missouri - Propane', year=2017,
+                     gge_reduced=903.101, ghg_reduced=1.276533264)
+
+        # Transportation Projects
+
+        t1 = Transportation(name='City of Kansas City Missouri - CNG Shuttle',
+                     year=2017, gge_reduced=269133.3, ghg_reduced=226.6102386)
+        t2 = Transportation(name='City of Kansas City Missouri - CNG Vans',
+                     year=2017, gge_reduced=87652.7, ghg_reduced=113.5540729)
+        t3 = Transportation(name='Dart Long-Haul Fleet', year=2015,
+                     gge_reduced=720000, ghg_reduced=606.24)
+        t4 = Transportation(name='Zarco 66 Heavy Duty B20', year=2014,
+                     gge_reduced=1093.80128, ghg_reduced=9.578417809)
 
         # locations
-        p1.locations.append(Location(address='601 N Iowa St', city='Lawrence', state='KS',
+        b1.locations.append(Location(address='601 N Iowa St', city='Lawrence', state='KS',
                                      zip_code=66044, location='POINT(38.9930314 -95.2632409)'))
-        p2.locations.append(Location(address='14220 Wyandotte St', city='Kansas City', state='MO',
+        b2.locations.append(Location(address='14220 Wyandotte St', city='Kansas City', state='MO',
                                      zip_code=64145, location='POINT(38.8705357 -94.6095686)'))
-        p3.locations.extend([
+        t1.locations.extend([
             Location(address='W 75th St & Wornall Rd', city='Kansas City', state='MO',
                      zip_code=64114, location='POINT(38.9924194 -94.5965102)'),
             Location(address='On 63rd & Brookside', city='Kansas City', state='MO',
@@ -112,19 +106,19 @@ def seed_db(config='dev'):
             Location(address='On Brookside at 51st SB', city='Kansas City', state='MO',
                      zip_code=64112, location='POINT(39.0338538 -94.585571)')
         ])
-        p4.locations.append(Location(address='100 NW Vivion Rd', city='Kansas City', state='MO',
+        t2.locations.append(Location(address='100 NW Vivion Rd', city='Kansas City', state='MO',
                                      zip_code=64118, location='POINT(39.1650181 -94.6187879)'))
-        p5.locations.extend([
+        t3.locations.extend([
             Location(address='8400 E Truman Rd', city='Kansas City', state='MO',
                      zip_code=64126, location='POINT(39.112502 -94.5194595)'),
             Location(address='4121 N Kentucky Ave', city='Kansas City', state='MO',
                      zip_code=64161, location='POINT(39.1128102 -94.7304727)')
         ])
-        p6.locations.append(Location(address='3451-3599 W Luke St', city='Lincoln', state='NE',
+        b3.locations.append(Location(address='3451-3599 W Luke St', city='Lincoln', state='NE',
                                      zip_code=68524, location='POINT(40.8502301 -96.7688027)'))
-        p7.locations.append(Location(address='1101 Riverside Dr', city='Jefferson City', state='MO',
+        b4.locations.append(Location(address='1101 Riverside Dr', city='Jefferson City', state='MO',
                                      zip_code=65101, location='POINT(38.57268 -92.1573004)'))
-        p8.locations.extend([
+        t4.locations.extend([
             Location(address='2005 W 9th St', city='Lawrence', state='KS',
                      zip_code=66044, location='POINT(38.781587 -95.3452984)'),
             Location(address='2518 E Logan St', city='Ottowa', state='KS',
